@@ -1,9 +1,15 @@
 ---
 name: sports-betting-risk-management
 description: Responsible sports-betting analysis workflow for football/soccer tournaments and match-by-match betting plans. Use when the user asks for 世界杯赌球策略, 足球下注策略, betting picks, bankroll management, odds/value analysis, group-stage match plans, or gambling risk control. This skill emphasizes fixture/odds verification, conditional recommendations, bankroll limits, and no guaranteed-win claims.
+version: 2.0.0 (edge- and calibration-coupled patch)
 ---
 
 # Sports Betting Risk Management
+
+> 【v2 摘要】保留全部 injury/live/consent 纪律不变；仅在三处动刀：
+> ①仓位由 edge 推导（1/4 凯利），信心只作收缩；②停手用回撤/置信区间，弃"连黑3场"硬停；
+> ③新增校准账本 + Kill-switch，并加跨场同方向上限与最低 edge 门槛。
+> 目标是保本与诚实，不是提高胜率。
 
 ## Trigger
 
@@ -27,6 +33,13 @@ Never promise sure wins, stable profit, or risk-free returns.
 
 Separate **prediction probability** from **betting value**. A team can be more likely to win but still be a pass if the market price is too expensive. For every A/B recommendation, state the model probability range, market-implied probability, value gap, and the price at which the pick becomes a pass.
 
+**【v2】Minimum edge + size by edge.** Stating the value gap is not enough — gate on it.
+Only treat a pick as executable when
+`value gap = model_prob − ask_price_implied_prob ≥ 5 percentage points`,
+using the **ask / buy price** (which already includes Polymarket's spread = your real cost),
+not the mid. A pick whose edge vanishes once you use the ask price is a pass.
+And size by the **magnitude** of the edge (fractional Kelly, workflow §4), not by the confidence grade alone.
+
 ## Required workflow
 
 For Polymarket live execution and proportional-staking details, see `references/polymarket-live-execution-and-proportional-staking.md`.
@@ -36,11 +49,13 @@ For late injury/lineup-driven re-rating and concrete downgrade actions, see `ref
 1. **Verify fixtures first**
    - Check current schedule, teams, kickoff time, and timezone before giving a plan.
    - Convert to the user's relevant timezone when useful, especially Beijing time / Bangkok time.
+   - **【v2】Slug integrity check.** Parse each Polymarket slug's team codes and confirm they match the fixture (e.g. Germany vs Curaçao must be `ger-cuw`-like; a `ger-kor` slug = Korea, not in the group → `SLUG_MISMATCH`, drop the link, never bet on it). Timestamp every price; if older than 15 min, re-pull.
 
 2. **Ask for or state odds dependency**
    - If no live odds are provided, give conditional thresholds instead of absolute picks.
    - Example: “If Mexico DNB is above X, small stake; if 1x2 price is too low, pass.”
    - Convert odds/Polymarket price into implied probability when possible, then compare with the model probability. Do not call a pick “value” without this comparison.
+   - **【v2】Use the ask/buy price for the implied probability**, not the mid — the spread is your cost. Estimate model probability *before* reading the market price to avoid anchoring; if model ≈ market, flag possible anchoring and recheck.
 
 3. **Classify bet types**
    - Safer: Draw No Bet, Asian handicap 0 / +0.25 / +0.5, underdog with spread, small-ball where tactical conditions fit.
@@ -50,11 +65,31 @@ For late injury/lineup-driven re-rating and concrete downgrade actions, see `ref
 4. **Set bankroll limits and proportional stakes before picks**
    - Define total bankroll as 100 units.
    - Treat “1份” as the user's current base stake (for this user often 10 USDC), but **do not mechanically bet 1份 on every pick**.
-   - Size each pick by confidence + market value: B-/high variance 0.3-0.5份; B 0.5-0.8份; B+ 0.8-1.0份; A-/A 1.0-1.5份.
+   - **【v2】Size by edge, not by grade.** Base the stake on quarter-Kelly:
+     ```
+     f_kelly = (q − p) / (1 − p)        # q = model prob, p = ask/buy price
+     base    = 0.25 × f_kelly
+     stake   = base × conf_mult × lineup_mult
+       conf_mult:   A=1.0  B=0.7  C=0.0
+       lineup_mult: confirmed=1.0  unconfirmed=0.5
+     ```
+     Confidence and lineup only **shrink** the edge-derived size; they never inflate it.
+   - **【v2】The old grade→份 ranges are kept only as sanity caps, not as the sizing rule**:
+     B-/high variance ≤0.5份; B ≤0.8份; B+ ≤1.0份; A-/A ≤1.5份.
+     A B-grade pick with a tiny edge should be *smaller* than its range; with a large edge it may reach the cap.
    - Maximum total risk on one match across all correlated markets (1X2 + totals + props) is 2份.
+   - **【v2】Cross-match directional cap.** Tag each bet (CHALK / UNDER / UNDERDOG / …);
+     same-direction exposure summed across matches ≤ 5% of bankroll (≈ 4–5份).
+     The per-match 2份 cap does not catch a whole slate that is all chalk / all unders.
+   - **【v2】Capital mode.** Once a real bankroll or 250/500/1000-level stake is given, switch to %:
+     single match 1–2.5% reasonable, 2.5–5% aggressive (confirm), >5% not advised;
+     total open exposure 15–25% → mark “aggressive”, stop new adds, only trim/lock/stop-loss.
    - If a position already exists, only top up to the target stake; do not add a fresh full unit.
-   - Stop after 3 consecutive losses.
-   - Stop for the day after 5 units drawdown.
+   - **【v2】Stops by drawdown and variance, not by streak.**
+     - Daily: stop new bets after 5 units / 3% bankroll drawdown for the day. (kept)
+     - Peak drawdown: after 8% drawdown from the account peak, halve all sizing until back within 3% of peak.
+     - “Is the model broken?” check: over a rolling 50 bets, if realized results fall outside the model's 95% interval (clearly worse than the model implies), pause and investigate.
+     - The old “stop after 3 consecutive losses” is retained **only as a soft prompt to recheck, not a hard stop** — 3 losses in a row is normal variance even with positive edge (~9% at 55% win prob).
    - No martingale, no chase, no doubling to recover losses.
 
 5. **Give match-by-match plan**
@@ -89,6 +124,24 @@ For late injury/lineup-driven re-rating and concrete downgrade actions, see `ref
    - Separate **main side** from correlated add-ons. Do not execute or recommend adding both a handicap and a total as normal副仓 just because the favorite is stronger; treat -1.5, O/U, BTTS, and correct score as optional correlated risk requiring explicit confirmation per market.
    - If the user questions why a correlated market was executed, acknowledge and correct: preserve the core side if still valid, reduce optional correlated markets first, and report current position sizes before proposing trades.
    - For “wait for lineup” matches, name the single trigger player/position (e.g. a playmaker or fullback) and provide branches: if starts → small side allowed; if out → abandon side, prefer total/underdog resistance or no bet.
+
+## Calibration ledger & kill-switch (v2 新增)
+
+The whole point of this section: let data, not feeling, decide whether the system is allowed to bet real money.
+
+Maintain — jointly with `world-cup-daily-prediction` — a ledger of every **confirmed** bet:
+`date / match / market / model_prob q / ask_price p / result / closing_price / CLV`.
+
+Every rolling 50 bets, compute and record:
+
+- **Brier (model)** = `mean((q − result)^2)`, and **Brier (follow-the-market baseline)** for the same bets.
+- **Average CLV** (your entry vs the closing line). A persistently **positive average CLV is the single most reliable evidence of real edge.**
+
+**Kill-switch (hard rule):**
+- If `model Brier ≥ baseline Brier` **AND** `average CLV ≤ 0` → set `stake × 0` (research mode only) until the method improves and re-passes the check.
+- If the model only marginally beats the baseline (within noise) → apply an extra `× 0.5` caution factor.
+
+Stake sizing in §4 **must consume this signal**. This is what stops you (and any pooled participants) from putting real money on a system that has not been shown to work.
 
 ## Injury / lineup update adjustment discipline
 
@@ -143,6 +196,9 @@ When the user asks what to do because an existing pick is losing live (e.g. favo
 - Do not recommend high-risk parlays as the main plan.
 - Do not give outdated fixtures from memory; verify current schedule.
 - Do not treat team reputation as enough; account for lineups, odds, motivation, travel, weather, and market movement.
+- **【v2】Do not mark a pick executable when the value gap is < 5pp (computed on the ask price).**
+- **【v2】Do not hard-stop on a 3-loss streak alone; use drawdown / confidence-interval stops — a streak is usually variance, not a broken model.**
+- **【v2】Do not output a Polymarket link that failed the slug team-code check.**
 
 ## Compact template
 
@@ -154,9 +210,10 @@ When the user asks what to do because an existing pick is losing live (e.g. favo
 
 主方向：...
 副方向：...
-仓位：... 单位
+模型概率 / 市场隐含(买入价) / 价值差：...%/...%/...pp   （【v2】<5pp 即 pass）
+仓位：按 edge 推导（1/4 凯利，信心/首发收缩，封顶 2份/场）
 赔率阈值：...
 不碰：...
 赛前复核：首发、盘口变化、大小球变化、伤停、动机。
-停手机制：连黑3场停；当天亏5单位停；不追单。
+停手机制：【v2】单日回撤3% / 峰值回撤8%减半 / 50注校准打不过基准则Kill-switch；不追单。
 ```

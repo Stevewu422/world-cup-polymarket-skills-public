@@ -1,108 +1,46 @@
-# Match prediction scoring matrix
+# Match Prediction Scoring Matrix v2
 
-## 目标
+Use before assigning A/B/C grades in `world-cup-daily-prediction`.
 
-把“感觉看好”变成可复盘的概率判断。每场先按矩阵打分，再判断是否有下注价值。预测强不等于值得买，只有当模型概率和市场价格之间存在足够 edge，且信息确定性足够，才进入下注候选。
+## Required order
 
-## 5 维评分
+1. Verify fixture and lineup/injury facts.
+2. Estimate model probability `q` before reading the market.
+3. Read executable market buy price `p` from best ask/sell-one price with timestamp.
+4. Compute edge: `q - p`.
+5. Only mark executable if edge >= 5 percentage points.
 
-每项 0-5 分，总分 25 分。评分不需要很长，但必须写出扣分原因。
+## 25-point matrix
 
-### 1. 基本面
+Score each item from 0-5:
 
-看球队真实强弱和近期表现：
+- Fundamentals: Elo/ranking/xG/recent performance.
+- Lineup and injuries: confirmed starters, position-weighted injury impact.
+- Motivation and schedule: group incentives, rest, travel, rotation.
+- Market price: edge vs best ask, liquidity, spread.
+- Information certainty: source quality, lineup confirmation, data freshness.
 
-- xG / xGA、射门质量、big chances；
-- 控球推进、压迫、转换、防定位球；
-- 对手强度调整后的近况，而不是只看连胜/连败；
-- 门将状态和防线稳定性。
+## Grade mapping
 
-### 2. 阵容/伤停
+- A: high matrix score, data complete, edge >= 5pp, strong counterargument addressed.
+- B: edge >= 5pp but one or more uncertainty factors remain; size must be reduced by risk multipliers.
+- C: edge < 5pp, data stale/incomplete, slug mismatch, or thesis too fragile. Output `无 edge / 不下`.
 
-看缺席是否改变比赛结构：
+## Counterargument requirement
 
-- 中卫/边卫缺席：提高对手进球、BTTS、Over 风险；
-- 后腰缺席：提高被反击和禁区前沿失控风险；
-- 核心创造者缺席：降低让球穿盘和大球信心；
-- 门将变动：提高尾部风险，降低重仓资格；
-- 首发未确认时，信息确定性不得给满分。
+For every A/B recommendation, write:
 
-### 3. 动机/赛程
+- strongest counterargument;
+- exact downgrade trigger;
+- pass price where edge disappears;
+- lineup player/position that changes the thesis.
 
-看比赛目标和体能：
+## Calibration fields
 
-- 小组赛第 3 轮：出线、净胜球、轮换、默契平局；
-- 淘汰赛：90 分钟市场与晋级市场分开；
-- 休息天数、旅途、气候、场地；
-- 领先后是否会收缩，落后方是否必须冒险。
-
-### 4. 市场价格
-
-看是否有 value，而不是只看方向：
-
-- Polymarket 当前概率与模型概率差；
-- 主流赔率隐含概率和 Polymarket 是否明显偏离；
-- 价格是否已经被热门叙事压穿；
-- 流动性、买卖价差、可成交量；
-- 临场盘口移动是否支持原判断。
-
-### 5. 信息确定性
-
-看已核验程度：
-
-- 赛程/时间已确认；
-- 首发/伤停来源可靠；
-- 盘口/市场价格为当前数据；
-- X/社媒传闻已被主流来源确认；
-- 没有重大未知变量。
-
-## 评级映射
+After the match, append to the shared ledger:
 
 ```text
-22-25 分：A，只有价格仍有 edge 才可执行，1.2-1.5 份
-19-21 分：A-，可执行但不追价，1.0-1.2 份
-16-18 分：B+，条件执行，0.8-1.0 份
-13-15 分：B，轻仓或等待临场，0.5-0.8 份
-10-12 分：B-，小仓/保护仓/条件单，0.3-0.5 份
-0-9 分：C，观望，不下注
+date / match / market / q / p / closing_price / result / CLV / notes
 ```
 
-任何一项信息确定性低于 3 分时，最高只能给 B+。阵容/伤停低于 3 分且比赛临近时，最高只能给 B。
-
-## 概率与 edge
-
-每场至少给一个粗概率区间：
-
-```text
-模型概率：55%-58%
-市场隐含概率：51%
-价值差：约 4-7 个百分点
-结论：有轻微 edge，但若价格升到 0.56 以上则放弃
-```
-
-若无法可靠估算概率，不能给 A 级，只能输出条件观察。
-
-## 反证流程
-
-A/B 级方向必须回答：
-
-1. 最强反方观点是什么？
-2. 哪个首发/伤停/盘口变化会推翻判断？
-3. 当前价格是否已经反映主要优势？
-4. 有没有更好的替代市场，例如 DNB、受让、大小球、晋级？
-5. 如果临场价格上涨，还剩多少 edge？
-
-回答不清楚时，信心下调一级；如果反方直接击穿核心逻辑，取消下注。
-
-## 赛后校准
-
-赛后记录：
-
-- 预测方向是否正确；
-- 买入价、收盘价、CLV；
-- 模型概率与结果是否长期偏差；
-- Brier score / log loss 可选；
-- 错误类型：阵容误读、市场过热、红牌/早球、节奏误判、动机误判、价格无价值。
-
-下一轮只根据连续样本修正，不因一场输赢大幅改变模型。
-
+Rolling 50 bets feed into the Brier/CLV kill-switch in `sports-betting-risk-management`.

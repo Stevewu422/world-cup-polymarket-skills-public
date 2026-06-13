@@ -1,13 +1,10 @@
 {
-  "skills": [
-    "world-cup-polymarket-orchestrator",
-    "world-cup-daily-prediction",
-    "world-cup-caiqiu-prediction",
-    "polymarket-pool-accounting",
-    "polymarket-pool-ledger-accounting",
-    "sports-betting-risk-management"
-  ],
+  "updated": "v2 edge/kellly/calibration patch",
   "files": [
+    {
+      "path": "PACKAGE_MANIFEST.json",
+      "size": 8354
+    },
     {
       "path": "README.md",
       "size": 1244
@@ -62,15 +59,19 @@
     },
     {
       "path": "skills/sports-betting-risk-management/README.md",
-      "size": 849
+      "size": 876
     },
     {
       "path": "skills/sports-betting-risk-management/SKILL.md",
-      "size": 12094
+      "size": 17577
     },
     {
       "path": "skills/sports-betting-risk-management/_meta.json",
       "size": 148
+    },
+    {
+      "path": "skills/sports-betting-risk-management/references/edge-kelly-calibration-kill-switch-20260613.md",
+      "size": 2026
     },
     {
       "path": "skills/sports-betting-risk-management/references/polymarket-live-execution-and-proportional-staking.md",
@@ -86,11 +87,11 @@
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/README.md",
-      "size": 691
+      "size": 718
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/SKILL.md",
-      "size": 8376
+      "size": 13561
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/_meta.json",
@@ -110,15 +111,19 @@
     },
     {
       "path": "skills/world-cup-daily-prediction/README.md",
-      "size": 634
+      "size": 661
     },
     {
       "path": "skills/world-cup-daily-prediction/SKILL.md",
-      "size": 9144
+      "size": 14810
     },
     {
       "path": "skills/world-cup-daily-prediction/_meta.json",
       "size": 144
+    },
+    {
+      "path": "skills/world-cup-daily-prediction/references/match-prediction-scoring-matrix.md",
+      "size": 1540
     },
     {
       "path": "skills/world-cup-daily-prediction/references/polymarket-gamma-world-cup-market-probe.md",
@@ -130,11 +135,11 @@
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/README.md",
-      "size": 750
+      "size": 777
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/SKILL.md",
-      "size": 19553
+      "size": 24035
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/_meta.json",
@@ -147,6 +152,10 @@
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/account2-direct-script-execution-and-risk-override.md",
       "size": 2560
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/account2-fok-error-but-fill-readback-20260613.md",
+      "size": 1655
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/account2-script-based-polymarket-execution.md",
@@ -191,6 +200,10 @@
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/moltbook-x-football-prediction-learning-20260613.md",
       "size": 5926
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/orchestrator-guardrail-patch-v2-20260613.md",
+      "size": 3720
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/orchestrator-workflow.md",

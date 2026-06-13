@@ -9,4 +9,4 @@
 
 ## Security note
 
-This public copy is sanitized. Real credentials, private keys, cookies, API tokens, exact private operational endpoints, and transaction hashes are excluded or redacted. Configure your own environment variables and verify region/compliance before any live trading.
+This public copy is sanitized. Real credentials, private keys, cookies, API tokens, passphrases, exact private operational endpoints, and transaction/order hashes are excluded or redacted. Configure your own environment variables and verify legal/platform compliance before any live trading.

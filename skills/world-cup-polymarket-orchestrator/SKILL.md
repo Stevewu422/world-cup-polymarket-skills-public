@@ -14,6 +14,85 @@ related_skills: [research-source-monitoring, world-cup-daily-prediction, sports-
 - `references/injury-adjusted-matchday-white-page-20260613.md` — injury-driven reforecast pattern for four World Cup matches, including downgrade discipline and publishing a verified white long-image page.
 - `references/large-add-position-precision-and-market-selection-20260613.md` — large add-position execution notes: per-command max-order override, integer BUY size precision fix, and not adding to markets that were downgraded to protection/observation positions.
 
+## v2 执行护栏补丁（只加刹车，不优化执行机制）
+
+# Orchestrator 护栏补丁 v1
+
+> 本补丁**只往 `world-cup-polymarket-orchestrator` 新增护栏与警告**，
+> 不改、不优化任何执行机制。
+> **触碰范围**：执行前刹车门、数据完整性门、单一来源指针、风险/合规警告。
+> **明确不触碰**：香港服务器出口路由、多账户协调逻辑、资金池分配记账、下单精度/吞吐。
+> 这些只增加"在什么情况下不许下单"和"有哪些风险"，不会让上述任何能力更好用。
+
+---
+
+## 1. 执行前校准门（硬 gate，置于"实盘执行安全门"之前）
+
+进入任何实盘执行前，必须先通过 `sports-betting-risk-management` 的校准检查：
+
+- 读取滚动 50 注的 `model Brier` vs `市场基准 Brier`、以及 `平均 CLV`。
+- **若 `model Brier ≥ 基准` 且 `平均 CLV ≤ 0` → 本轮一切实盘执行 `BLOCKED`**，
+  只允许研究 / dry-run，不允许真金下单。
+- 若模型仅边际优于基准（差距在噪声内）→ 所有 size `× 0.5`。
+
+> 这是一道刹车：系统没被证明有 edge 时，不放行真金下单。
+> 涉及他人资金时，这道门尤其重要——它是"系统其实没用却继续下注"的最后拦截。
+
+---
+
+## 2. 执行前数据完整性门（任一失败即 abort 该腿）
+
+任何下单前必须全部通过：
+
+- **FIXTURE**：对阵 / 日期 / 分组与官方源一致（否则 `FIXTURE_MISMATCH`）。
+- **SLUG**：Polymarket slug 的队伍三字码与对阵匹配
+  （防 `ger-kor` 类错链真金下单；不匹配 → `SLUG_MISMATCH`，撤下该链接）。
+- **PRICE**：`clobTokenId` 取自当前 Gamma 数据、orderbook 有效、价格时间戳 ≤ 15 分钟。
+- **SIZE**：精度合规（maker/taker 小数位）；不同 market 的份额不跨市场相加。
+
+---
+
+## 3. 仓位与停手：单一来源
+
+- orchestrator **删除本地副本**：
+  - "建议比例：A 1.2-1.5 份 / A- 1.0-1.2 份 / …"
+  - "连续错 3 场停止"
+- 全部改为调用 `sports-betting-risk-management` v2：
+  edge 推导仓位（1/4 凯利）、回撤/置信区间停手、校准 Kill-switch。
+
+> 三个文件各写一份阈值，迟早改岔。只留一个来源。
+
+---
+
+## 4. 风险与合规警告（请置于 orchestrator 文件顶部显著位置）
+
+本系统涉及三类高风险、可能违规的操作。**技术能跑通 ≠ 合规**，正式运行前请由
+当地有资质的法律/合规专业人士评估：
+
+- **地区限制规避**：通过香港服务器并校验出口为 HK 来满足 Polymarket 访问，
+  实质是绕开平台地理限制。这与 `world-cup-daily-prediction` 4.1 第 9 条
+  "不要尝试规避地区限制"**直接冲突**，且可能违反平台条款，导致封号、冻结资金
+  （连带损害资金池其他参与人）。
+- **多账户控制**：一人控制多个账户通常违反平台"一人一户"条款；
+  跨账户协调即便标注"避免自成交/操纵"，仍可能被认定为市场操纵。
+- **多人资金池**：汇集他人资金代为下注并分配盈亏，在多个法域可能触及
+  无牌资金管理 / 博彩经营的红线，具体取决于你和各参与人所在地。
+
+**处理他人资金时**，任何突破风控上限的请求都必须二次确认并书面留痕；
+风控规则对资金池与对自己一视同仁。
+
+---
+
+## 不在本补丁范围内（保持原样，亦不由本补丁优化）
+
+- 香港服务器 / 出口国家校验 / HK guard 的实现细节
+- 多账户认证、协调、汇总报告逻辑
+- 资金池本金修正、利润分配、份额转让的记账逻辑
+- CLOB 下单精度修正、FOK/重试、吞吐相关脚本
+
+以上若需评估，请走合规/法律专业人士，而非把它当作纯技术问题。
+
+
 ## 何时使用
 
 当主人要求：
@@ -40,7 +119,7 @@ related_skills: [research-source-monitoring, world-cup-daily-prediction, sports-
   ↓
 赛程/市场/赔率核验
   ↓
-评分矩阵 + 反证 + 早盘或临场预测
+早盘或临场预测
   ↓
 风险评级与比例仓位
   ↓
@@ -74,19 +153,18 @@ dry-run / live 执行安全检查
 - 04:00 早盘：隔夜复盘 + 未来 24-36 小时初判；
 - 16:00 临场：首发/伤停/盘口/Polymarket 价格复核；
 - 对早盘判断执行“上调/维持/降级/取消”；
-- 按 `world-cup-daily-prediction/references/match-prediction-scoring-matrix.md` 区分预测概率、市场隐含概率和下注价值；
-- 对 A/B 级方向输出最强反方观点、推翻条件和降级触发器；
 - 输出主方向、副方向、观望单。
 
 ### 3. 风控仓位引擎：sports-betting-risk-management
 
 负责：
 
-- A/B/C 信心等级；
-- 价值等级：高/中/低；
-- 比例下注，不机械等额；
-- 单场总风险上限；
-- 单日亏损停止与连续错单停止；
+- 价值差门槛：用买入价/卖一价计算 `q-p`，低于 5pp 写“无 edge / 不下”；
+- 先估模型概率 `q`，再读盘口 `p`，防止市价锚定；
+- 仓位由 edge 推导：1/4 Kelly，信心/首发/流动性/相关性只能下修；
+- 停手用回撤/置信区间，不再用“连错3场”硬停；
+- 校准账本、Brier/CLV Kill-switch；
+- 同方向跨场敞口上限；
 - 禁止追单、倍投、马丁格尔。
 
 ### 4. 世界杯执行层：world-cup-caiqiu-prediction
@@ -139,12 +217,7 @@ Polymarket：URL / event slug
 评级：
 - 主方向信心：A/B/C
 - 价值等级：高/中/低
-- 评分矩阵：基本面/阵容/动机/市场价格/信息确定性 = ... /25
-- 模型倾向概率：...%
-- 市场隐含概率：...%
-- 价值差：... 个百分点
 - 风险点：...
-- 反证：最强反方观点 / 推翻条件 / 降级触发器
 
 仓位：
 - 目标份数：X 份（1份=10USDC 时约 X*10USDC）
@@ -171,28 +244,18 @@ Polymarket token：
 
 ## 比例下注规则
 
-主人当前口径：`1份` 常按 `10 USDC` 作为普通研究/小额仓位基准，但当主人给出总资本或要求 250/500/1000 USDC 级别实盘时，必须切换到“资本百分比风控”并加载 `references/bankroll-capital-risk-and-large-order-guardrails.md`。**不得所有比赛/方向等额下单**。
+仓位与停手规则统一引用 `sports-betting-risk-management` v2，本 orchestrator 不再维护独立份数表，避免多文件阈值改岔。
 
-建议比例：
+执行摘要：
 
-- A：1.2-1.5 份，强信号 + 价格有价值；
-- A-：1.0-1.2 份，方向清晰且价格可接受；
-- B+：0.8-1.0 份，方向较清晰但价格一般；
-- B：0.5-0.8 份，有小优势但风险明显；
-- B-：0.3-0.5 份，信息不足或波动较大；
-- C：0 份，只看不买。
-
-硬规则：
-
-- 普通小额模式：单场胜负 + 大小球 + 其他市场合计通常不超过 2 份；
-- 资本模式：按总资本计算，单场 1%-2.5% 合理，2.5%-5% 偏积极，5%-10% 属高风险重仓，>10% 默认不建议；
-- 当前未平仓总敞口达到 15%-25% 总资本时，标记“偏激进”，后续默认停止新增，只做临场复核、减仓、锁盈或止损；
-- 单日建议总投入 3-5 份以内，除非主人明确放宽；
-- 当天亏损 5 份停止；
-- 连续错 3 场停止；
-- 正确比分/半全场/串关只可 0.1-0.2 份娱乐；
-- 已有持仓只补到目标份数，不机械再买整份；但若主人说“买 X USDC / 再下 X USDC”，默认表示本轮新增买入金额，而不是把最终持仓补到 X。
-- 报表口径：可汇总每场 USDC 金额敞口；但胜负、大小球、让球等不同市场的“份额/size”不能相加，必须按市场分别列出。
+- 先独立估 `q`，再读取 Polymarket / 赔率市场买入价 `p`。
+- 只有 `q-p >= 5个百分点` 才可进入实盘候选；否则 `无 edge / 不下`。
+- 仓位基数：`base = 0.25 * (q-p)/(1-p)`。
+- 信心、首发、伤停、流动性、盘口时间戳、相关性、同方向敞口只能缩小仓位，不能放大。
+- 旧 A/B/C 份数区间只作为 sanity 上限，不作为固定份数来源。
+- 单日回撤 3% 停新增；峰值回撤 8% 全仓减半；50 注 Brier/CLV kill-switch 触发则停止真金下注。
+- 用户明确说“买 X USDC / 再下 X USDC”时，仍需先过校准门、数据完整性门和合规风险提示；未过门只允许 dry-run。
+- 报表口径：可汇总每场 USDC 金额敞口；但胜负、大小球、让球等不同市场的“份额/size”不能相加，必须按独立 market/outcome 分别列出。
 
 ## Polymarket 市场解析规则
 
@@ -230,6 +293,14 @@ outcomes[1] 通常是 No/Under
 ### World Cup games keyset
 
 普通搜索漏掉 child / More Markets 时，优先用 keyset 类接口/页面数据查找世界杯 games 下的完整 event/market，再回到 Gamma market 数据验证。
+
+## 校准门与数据完整性门（v2 硬 gate）
+
+任何 live 实盘执行前必须先通过：
+
+1. **校准门**：读取 rolling 50 bets 的 model Brier、market baseline Brier、average CLV；若 `model Brier >= baseline Brier` 且 `average CLV <= 0`，本轮实盘 `BLOCKED`，只允许 research/dry-run。
+2. **数据完整性门**：fixture / date / group 交叉核验；Polymarket slug 队伍三字码匹配；market title、outcome、clobTokenId、orderbook 有效；价格时间戳 <= 15 分钟；SIZE 精度合规。任一失败即 abort 该腿。
+3. **合规提示**：HK 路由、多账户、资金池分账/提成可能涉及平台条款、监管、税务、托管/受托责任，不应作为纯技术优化；规模化前需有资质专业人士评估。
 
 ## 实盘执行安全门
 
@@ -288,6 +359,8 @@ before/after balance
 - 偏差原因：阵容、红牌、早段进球、盘口误判、价格无价值；
 - 下一轮修正：仓位上调/下调、模型权重调整。
 
+- `references/account2-fok-error-but-fill-readback-20260613.md` — account2-specific pattern for ambiguous FOK/API errors where readback shows the order actually filled; always check activity/positions before retrying.
+
 ## 常见坑点
 
 ❌ 所有比赛机械下一份。  
@@ -340,7 +413,6 @@ before/after balance
 - `references/polymarket-multi-account-auth-troubleshooting.md`：account2/multi-account 认证失败或用户怀疑误用 account1 API 时使用；包含脱敏 env 对比、脚本读取路径核验、signature_type/funder auth matrix、截图密钥核对注意事项和 1 USDC live test 安全门。
 - `references/live-fixture-market-api-probes.md`：早盘/临场只读核验探针；包含 FIFA calendar、ESPN scoreboard/summary、Polymarket Gamma keyset More Markets、CLOB orderbook 的可复用 API 路径与输出注意。
 - `references/moltbook-x-football-prediction-learning-20260613.md`：从 Moltbook/ClawHub/X 搜索中吸收的足球预测增强框架；包含盘口/基本面/阵容/防守伤停/xG/确定性分级/仓位版式要求。Cron 生成“确定性分级卡片”时必须参考。
-- `../world-cup-daily-prediction/references/match-prediction-scoring-matrix.md`：每日预测评分矩阵；输出 A/B/C 前先拆分基本面、阵容、动机、市场价格和信息确定性，并写反证与校准字段。
 - `references/worldcup-x-signal-monitor-wiring-20260613.md`：复用旧 X monitor skills/scripts 的世界杯 X 信号监控接线；包含 runner/config/state/error 路径、当前 X API 402 限制和 cron 使用方式。
 - `references/worldcup-certainty-card-web-cron-20260613.md`：用户确认的“世界杯确定性分级卡片”网页/长图/cron 交付规范；强调不要混用教育页、不要回到球员海报风格、固定 URL 与验证步骤。
 - `references/inplay-position-pnl-audit-and-risk-adjustment-20260613.md`：本场会话沉淀的临场调仓与真实 PnL 审计规则；强调真实盈亏必须读 account positions/activity，部分平仓用 SELL 现金流 + 剩余 currentValue，live advice 先查 orderbook best bid/ask。
