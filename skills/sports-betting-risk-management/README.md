@@ -4,4 +4,4 @@ Responsible sports-betting analysis workflow for football/soccer tournaments and
 
 ## Security note
 
-Sanitized public copy. Configure your own environment and verify platform/legal compliance before any live trading.
+Sanitized public copy. Configure your own environment and verify platform/legal compliance before live trading.

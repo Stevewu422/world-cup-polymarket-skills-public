@@ -99,7 +99,7 @@ author: Hermes Agent (v2 calibration patch)
 临场 workflow：
 
 - 开球前 70 分钟启动临场 check，先拉赛程、盘口和候选预测首发，进入盯盘状态。
-- 优先源：FIFA App/FIFA.com、两队官方社媒/官网；其次 Sofascore、FotMob、Flashscore；RotoWire/lineups.com/WhoScored/ESPN 用作预测与确认对照。
+- 优先源：RotoWire 世界杯首发聚合页 `https://www.rotowire.com/soccer/lineups.php?league=WOC`（一个 URL 覆盖全部比赛；未出时显示 `lineup has not been posted yet`；出后填 confirmed XI 并标 OUT/QUES）、FIFA App/FIFA.com、两队官方社媒/官网；其次 Sofascore 世界杯主页 `https://www.sofascore.com/football/tournament/world/world-championship/16` 的单场 Lineups、FotMob 单场页、Flashscore；lineups.com `https://www.lineups.com/world-cup/starting-lineups/`、SportsGambler `https://www.sportsgambler.com/lineups/football/fifa-world-cup/`、WhoScored、ESPN 用作预测与确认对照。
 - 预测/泄露首发只能标 `PROVISIONAL`，不能升级为 `CONFIRMED`。
 - 官方 XI 出现后，立即重估 q、重新拉 ask p、重跑 edge gate，并把原预测标为上调/维持/降级/取消。
 - 若 T-55 仍无官方 XI，标 `LINEUP_NOT_CONFIRMED`，首发乘数最多 0.5，只允许保守维持或降级，不允许上调仓位。

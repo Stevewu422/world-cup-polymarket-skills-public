@@ -1,9 +1,9 @@
 {
-  "updated": "v2.1 official lineup confirmation window",
+  "updated": "v2.1.1 lineup source links including RotoWire/Sofascore/lineups.com/SportsGambler",
   "files": [
     {
       "path": "PACKAGE_MANIFEST.json",
-      "size": 8804
+      "size": 9249
     },
     {
       "path": "README.md",
@@ -59,7 +59,7 @@
     },
     {
       "path": "skills/sports-betting-risk-management/README.md",
-      "size": 583
+      "size": 579
     },
     {
       "path": "skills/sports-betting-risk-management/SKILL.md",
@@ -87,11 +87,11 @@
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/README.md",
-      "size": 425
+      "size": 421
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/SKILL.md",
-      "size": 14462
+      "size": 14691
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/_meta.json",
@@ -111,11 +111,11 @@
     },
     {
       "path": "skills/world-cup-daily-prediction/README.md",
-      "size": 368
+      "size": 364
     },
     {
       "path": "skills/world-cup-daily-prediction/SKILL.md",
-      "size": 15798
+      "size": 16268
     },
     {
       "path": "skills/world-cup-daily-prediction/_meta.json",
@@ -135,7 +135,7 @@
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/README.md",
-      "size": 484
+      "size": 480
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/SKILL.md",
@@ -207,7 +207,7 @@
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/official-lineup-confirmation-window.md",
-      "size": 1856
+      "size": 4340
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/orchestrator-guardrail-patch-v2-20260613.md",

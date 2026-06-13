@@ -118,7 +118,7 @@ Session-derived Polymarket 执行与比例下注细节见：`references/2026-pol
 ## 官方首发确认窗口（v2.1 临场规则）
 
 - 球队提交首发表给当值官员通常在赛前 75-90 分钟，但公众可见的官方确认 XI 一般在赛前约 60 分钟。
-- 临场 cron/check 推荐开球前 70 分钟先启动，盯 FIFA App/FIFA.com、两队官方社媒/官网、Sofascore/FotMob/Flashscore 推送。
+- 临场 cron/check 推荐开球前 70 分钟先启动，主盯 RotoWire 世界杯首发聚合页 `https://www.rotowire.com/soccer/lineups.php?league=WOC`（一个 URL 覆盖全部比赛；未出时显示 `lineup has not been posted yet`；出后填 confirmed XI 并标 OUT/QUES），同时盯 FIFA/FIFA.com、两队官方社媒/官网、Sofascore/FotMob/Flashscore 推送。
 - RotoWire World Cup lineups、lineups.com、WhoScored、ESPN 可用于预测/确认对照；但未官方确认前一律标 `PROVISIONAL`。
 - 只有 FIFA/球队官方/可靠聚合源明确 confirmed XI 后才标 `CONFIRMED`，并立即重估 q、重拉 ask p、重跑 edge gate，输出上调/维持/降级/取消。
 - 若 T-55 仍未确认，标 `LINEUP_NOT_CONFIRMED`，首发乘数最多 0.5，只能维持保守或降级，不得上调仓位。
