@@ -40,7 +40,7 @@ related_skills: [research-source-monitoring, world-cup-daily-prediction, sports-
   ↓
 赛程/市场/赔率核验
   ↓
-早盘或临场预测
+评分矩阵 + 反证 + 早盘或临场预测
   ↓
 风险评级与比例仓位
   ↓
@@ -74,6 +74,8 @@ dry-run / live 执行安全检查
 - 04:00 早盘：隔夜复盘 + 未来 24-36 小时初判；
 - 16:00 临场：首发/伤停/盘口/Polymarket 价格复核；
 - 对早盘判断执行“上调/维持/降级/取消”；
+- 按 `world-cup-daily-prediction/references/match-prediction-scoring-matrix.md` 区分预测概率、市场隐含概率和下注价值；
+- 对 A/B 级方向输出最强反方观点、推翻条件和降级触发器；
 - 输出主方向、副方向、观望单。
 
 ### 3. 风控仓位引擎：sports-betting-risk-management
@@ -137,7 +139,12 @@ Polymarket：URL / event slug
 评级：
 - 主方向信心：A/B/C
 - 价值等级：高/中/低
+- 评分矩阵：基本面/阵容/动机/市场价格/信息确定性 = ... /25
+- 模型倾向概率：...%
+- 市场隐含概率：...%
+- 价值差：... 个百分点
 - 风险点：...
+- 反证：最强反方观点 / 推翻条件 / 降级触发器
 
 仓位：
 - 目标份数：X 份（1份=10USDC 时约 X*10USDC）
@@ -333,6 +340,7 @@ before/after balance
 - `references/polymarket-multi-account-auth-troubleshooting.md`：account2/multi-account 认证失败或用户怀疑误用 account1 API 时使用；包含脱敏 env 对比、脚本读取路径核验、signature_type/funder auth matrix、截图密钥核对注意事项和 1 USDC live test 安全门。
 - `references/live-fixture-market-api-probes.md`：早盘/临场只读核验探针；包含 FIFA calendar、ESPN scoreboard/summary、Polymarket Gamma keyset More Markets、CLOB orderbook 的可复用 API 路径与输出注意。
 - `references/moltbook-x-football-prediction-learning-20260613.md`：从 Moltbook/ClawHub/X 搜索中吸收的足球预测增强框架；包含盘口/基本面/阵容/防守伤停/xG/确定性分级/仓位版式要求。Cron 生成“确定性分级卡片”时必须参考。
+- `../world-cup-daily-prediction/references/match-prediction-scoring-matrix.md`：每日预测评分矩阵；输出 A/B/C 前先拆分基本面、阵容、动机、市场价格和信息确定性，并写反证与校准字段。
 - `references/worldcup-x-signal-monitor-wiring-20260613.md`：复用旧 X monitor skills/scripts 的世界杯 X 信号监控接线；包含 runner/config/state/error 路径、当前 X API 402 限制和 cron 使用方式。
 - `references/worldcup-certainty-card-web-cron-20260613.md`：用户确认的“世界杯确定性分级卡片”网页/长图/cron 交付规范；强调不要混用教育页、不要回到球员海报风格、固定 URL 与验证步骤。
 - `references/inplay-position-pnl-audit-and-risk-adjustment-20260613.md`：本场会话沉淀的临场调仓与真实 PnL 审计规则；强调真实盈亏必须读 account positions/activity，部分平仓用 SELL 现金流 + 剩余 currentValue，live advice 先查 orderbook best bid/ask。

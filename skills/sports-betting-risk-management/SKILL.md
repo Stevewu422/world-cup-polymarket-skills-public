@@ -25,6 +25,8 @@ Do **not** frame betting as prediction certainty. Treat it as:
 
 Never promise sure wins, stable profit, or risk-free returns.
 
+Separate **prediction probability** from **betting value**. A team can be more likely to win but still be a pass if the market price is too expensive. For every A/B recommendation, state the model probability range, market-implied probability, value gap, and the price at which the pick becomes a pass.
+
 ## Required workflow
 
 For Polymarket live execution and proportional-staking details, see `references/polymarket-live-execution-and-proportional-staking.md`.
@@ -38,6 +40,7 @@ For late injury/lineup-driven re-rating and concrete downgrade actions, see `ref
 2. **Ask for or state odds dependency**
    - If no live odds are provided, give conditional thresholds instead of absolute picks.
    - Example: “If Mexico DNB is above X, small stake; if 1x2 price is too low, pass.”
+   - Convert odds/Polymarket price into implied probability when possible, then compare with the model probability. Do not call a pick “value” without this comparison.
 
 3. **Classify bet types**
    - Safer: Draw No Bet, Asian handicap 0 / +0.25 / +0.5, underdog with spread, small-ball where tactical conditions fit.
@@ -61,6 +64,9 @@ For late injury/lineup-driven re-rating and concrete downgrade actions, see `ref
      - odds threshold if no live odds,
      - stake size,
      - avoid list.
+     - model probability vs market-implied probability,
+     - strongest counterargument and downgrade trigger,
+     - pass price where the edge disappears.
    - **Execution consent must be market-specific.** If the plan contains multiple correlated legs (win + spread + total), do not treat a general “继续/执行/可以” as approval to place every leg when recent discussion included uncertainty or injury-driven downgrades. Ask for or require a precise execution phrase naming the exact legs, e.g. “执行苏格兰胜，不执行 -1.5/O2.5” or “执行A：两个账户都减半小2.5”.
    - When fresh injury/lineup information arrives after a plan, re-rank the existing legs before any execution: keep/downgrade/exit/add. If a leg is downgraded from main/secondary to observation, explicitly say “不再新增，只保留/减仓” rather than leaving it in the executable bundle.
 
