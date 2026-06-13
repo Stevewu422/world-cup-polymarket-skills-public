@@ -115,6 +115,15 @@ Session-derived Polymarket 执行与比例下注细节见：`references/2026-pol
 - **【v2】价值差用买入价、并设门槛**：`价值差 = 模型概率 − 买入价隐含概率`（用卖一/买入价，含价差）；
   **仅 `价值差 ≥ 5 个百分点` 才可标为可执行**，否则写"无 edge / 不下"。1–2pp 视为噪声。
 
+## 官方首发确认窗口（v2.1 临场规则）
+
+- 球队提交首发表给当值官员通常在赛前 75-90 分钟，但公众可见的官方确认 XI 一般在赛前约 60 分钟。
+- 临场 cron/check 推荐开球前 70 分钟先启动，盯 FIFA App/FIFA.com、两队官方社媒/官网、Sofascore/FotMob/Flashscore 推送。
+- RotoWire World Cup lineups、lineups.com、WhoScored、ESPN 可用于预测/确认对照；但未官方确认前一律标 `PROVISIONAL`。
+- 只有 FIFA/球队官方/可靠聚合源明确 confirmed XI 后才标 `CONFIRMED`，并立即重估 q、重拉 ask p、重跑 edge gate，输出上调/维持/降级/取消。
+- 若 T-55 仍未确认，标 `LINEUP_NOT_CONFIRMED`，首发乘数最多 0.5，只能维持保守或降级，不得上调仓位。
+- 每场卡片必须列：`Lineup status / source / timestamp / changed players / new q / ask p / edge / action`。
+
 ## 仓位纪律
 
 以 100 单位为总资金，用户说“1份/一份”时默认把 1 份作为基准仓位（例如用户当前指定 1 份=10 USDC），但**不得所有比赛机械等额下注**。

@@ -13,6 +13,8 @@ related_skills: [research-source-monitoring, world-cup-daily-prediction, sports-
 
 - `references/injury-adjusted-matchday-white-page-20260613.md` — injury-driven reforecast pattern for four World Cup matches, including downgrade discipline and publishing a verified white long-image page.
 - `references/large-add-position-precision-and-market-selection-20260613.md` — large add-position execution notes: per-command max-order override, integer BUY size precision fix, and not adding to markets that were downgraded to protection/observation positions.
+- `references/official-lineup-confirmation-window.md` — official XI timing discipline: start watch at T-70, treat leaked/predicted XI as PROVISIONAL, upgrade only after official/FIFA/team/Sofascore/FotMob confirmed XI around T-60, then re-estimate q and rerun edge gate.
+- `references/v2-edge-gate-reforecast-hold-vs-add-20260614.md` — v2 reforecast pattern: separate HOLD from ADD, require `q - ask >= 5pp` for new exposure, and use ESPN/Gamma/CLOB probes when web search is unavailable.
 
 ## v2 执行护栏补丁（只加刹车，不优化执行机制）
 
@@ -360,6 +362,7 @@ before/after balance
 - 下一轮修正：仓位上调/下调、模型权重调整。
 
 - `references/account2-fok-error-but-fill-readback-20260613.md` — account2-specific pattern for ambiguous FOK/API errors where readback shows the order actually filled; always check activity/positions before retrying.
+- `references/account-position-review-and-v2-trim-runbook.md` — use when reviewing account1/account2 current holdings and giving modification advice: query positions + activity, include combo/conditional markets, compare total exposure to v2 risk bands, and trim secondary/correlated markets before touching core side positions.
 
 ## 常见坑点
 

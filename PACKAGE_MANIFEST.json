@@ -1,9 +1,9 @@
 {
-  "updated": "v2 edge/kellly/calibration patch",
+  "updated": "v2.1 official lineup confirmation window",
   "files": [
     {
       "path": "PACKAGE_MANIFEST.json",
-      "size": 8354
+      "size": 8804
     },
     {
       "path": "README.md",
@@ -59,11 +59,11 @@
     },
     {
       "path": "skills/sports-betting-risk-management/README.md",
-      "size": 876
+      "size": 583
     },
     {
       "path": "skills/sports-betting-risk-management/SKILL.md",
-      "size": 17577
+      "size": 18344
     },
     {
       "path": "skills/sports-betting-risk-management/_meta.json",
@@ -87,11 +87,11 @@
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/README.md",
-      "size": 718
+      "size": 425
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/SKILL.md",
-      "size": 13561
+      "size": 14462
     },
     {
       "path": "skills/world-cup-caiqiu-prediction/_meta.json",
@@ -111,11 +111,11 @@
     },
     {
       "path": "skills/world-cup-daily-prediction/README.md",
-      "size": 661
+      "size": 368
     },
     {
       "path": "skills/world-cup-daily-prediction/SKILL.md",
-      "size": 14810
+      "size": 15798
     },
     {
       "path": "skills/world-cup-daily-prediction/_meta.json",
@@ -135,15 +135,19 @@
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/README.md",
-      "size": 777
+      "size": 484
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/SKILL.md",
-      "size": 24035
+      "size": 24859
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/_meta.json",
       "size": 151
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/account-position-review-and-v2-trim-runbook.md",
+      "size": 3628
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/account2-add50-execution-readback-20260613.md",
@@ -200,6 +204,10 @@
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/moltbook-x-football-prediction-learning-20260613.md",
       "size": 5926
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/official-lineup-confirmation-window.md",
+      "size": 1856
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/orchestrator-guardrail-patch-v2-20260613.md",
@@ -260,6 +268,10 @@
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/same-ratio-multi-account-execution-20260613.md",
       "size": 2923
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/v2-edge-gate-reforecast-hold-vs-add-20260614.md",
+      "size": 2619
     },
     {
       "path": "skills/world-cup-polymarket-orchestrator/references/worldcup-certainty-card-web-cron-20260613.md",

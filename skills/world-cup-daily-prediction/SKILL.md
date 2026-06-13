@@ -92,6 +92,20 @@ author: Hermes Agent (v2 calibration patch)
 完成 q 的估计后，**再**进入第 4 节读市价、算价值差。
 若发现模型概率与市价几乎相同，标注"疑似锚定，需复核 q 的独立性"。
 
+### 1.6 官方首发确认窗口（v2.1 临场规则）
+
+首发有两层时间：球队向当值官员提交 team sheet 通常在赛前 75-90 分钟，但公众可见的官方确认 XI 通常在赛前约 60 分钟。
+
+临场 workflow：
+
+- 开球前 70 分钟启动临场 check，先拉赛程、盘口和候选预测首发，进入盯盘状态。
+- 优先源：FIFA App/FIFA.com、两队官方社媒/官网；其次 Sofascore、FotMob、Flashscore；RotoWire/lineups.com/WhoScored/ESPN 用作预测与确认对照。
+- 预测/泄露首发只能标 `PROVISIONAL`，不能升级为 `CONFIRMED`。
+- 官方 XI 出现后，立即重估 q、重新拉 ask p、重跑 edge gate，并把原预测标为上调/维持/降级/取消。
+- 若 T-55 仍无官方 XI，标 `LINEUP_NOT_CONFIRMED`，首发乘数最多 0.5，只允许保守维持或降级，不允许上调仓位。
+
+每场临场更新必须写：`Lineup status / source / timestamp / changed players / new q / ask p / edge / action`。
+
 ### 2. 昨日复盘模板
 
 ```text

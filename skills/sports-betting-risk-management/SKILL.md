@@ -33,18 +33,22 @@ Never promise sure wins, stable profit, or risk-free returns.
 
 Separate **prediction probability** from **betting value**. A team can be more likely to win but still be a pass if the market price is too expensive. For every A/B recommendation, state the model probability range, market-implied probability, value gap, and the price at which the pick becomes a pass.
 
-**【v2】Minimum edge + size by edge.** Stating the value gap is not enough — gate on it.
+【v2】Minimum edge + size by edge. Stating the value gap is not enough — gate on it.
 Only treat a pick as executable when
-`value gap = model_prob − ask_price_implied_prob ≥ 5 percentage points`,
-using the **ask / buy price** (which already includes Polymarket's spread = your real cost),
+value gap = model_prob − ask_price_implied_prob ≥ 5 percentage points,
+using the ask / buy price (which already includes Polymarket's spread = your real cost),
 not the mid. A pick whose edge vanishes once you use the ask price is a pass.
-And size by the **magnitude** of the edge (fractional Kelly, workflow §4), not by the confidence grade alone.
+And size by the magnitude of the edge (fractional Kelly, workflow §4), not by the confidence grade alone.
+
+【v2】Separate **HOLD** from **ADD**. Existing positions may remain acceptable even when the current ask price no longer offers ≥5pp edge. In reforecast or late-match updates, explicitly classify each leg as `HOLD / NO ADD / ADD CANDIDATE / TRIM / EXIT`. Never convert a qualitative “方向仍可” into a fresh add unless the current buy-price edge gate passes.
 
 ## Required workflow
 
-For Polymarket live execution and proportional-staking details, see `references/polymarket-live-execution-and-proportional-staking.md`.
+For Polymarket live execution and proportional-staking details, see references/polymarket-live-execution-and-proportional-staking.md.
 
-For late injury/lineup-driven re-rating and concrete downgrade actions, see `references/worldcup-injury-lineup-adjustment-20260613.md`.
+For late injury/lineup-driven re-rating and concrete downgrade actions, see references/worldcup-injury-lineup-adjustment-20260613.md.
+
+Official lineup confirmation timing: public confirmed XI normally appears around T-60 minutes, while team sheets may be submitted earlier around T-75 to T-90. Start watching at T-70, but treat leaks/predicted XI as `PROVISIONAL`; only FIFA/team official/Sofascore/FotMob confirmed XI upgrades lineup status to `CONFIRMED`. If T-55 still lacks official XI, apply lineup multiplier <=0.5 and do not upgrade stakes.
 
 1. **Verify fixtures first**
    - Check current schedule, teams, kickoff time, and timezone before giving a plan.
