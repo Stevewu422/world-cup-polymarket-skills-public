@@ -1,0 +1,260 @@
+{
+  "skills": [
+    "world-cup-polymarket-orchestrator",
+    "world-cup-daily-prediction",
+    "world-cup-caiqiu-prediction",
+    "polymarket-pool-accounting",
+    "polymarket-pool-ledger-accounting",
+    "sports-betting-risk-management"
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "size": 1244
+    },
+    {
+      "path": "skills/polymarket-pool-accounting/README.md",
+      "size": 624
+    },
+    {
+      "path": "skills/polymarket-pool-accounting/SKILL.md",
+      "size": 9960
+    },
+    {
+      "path": "skills/polymarket-pool-accounting/_meta.json",
+      "size": 144
+    },
+    {
+      "path": "skills/polymarket-pool-accounting/references/account1-principal-transfer-and-current-bet-reallocation-20260613.md",
+      "size": 3230
+    },
+    {
+      "path": "skills/polymarket-pool-accounting/references/account1-profit-reset-principal-20260613.md",
+      "size": 3105
+    },
+    {
+      "path": "skills/polymarket-pool-accounting/references/account1-reset-10264-and-current-bet-allocation-20260613.md",
+      "size": 3723
+    },
+    {
+      "path": "skills/polymarket-pool-accounting/references/reset-zero-portfolio-value-excess-to-steve-20260613.md",
+      "size": 2571
+    },
+    {
+      "path": "skills/polymarket-pool-ledger-accounting/README.md",
+      "size": 629
+    },
+    {
+      "path": "skills/polymarket-pool-ledger-accounting/SKILL.md",
+      "size": 9513
+    },
+    {
+      "path": "skills/polymarket-pool-ledger-accounting/_meta.json",
+      "size": 151
+    },
+    {
+      "path": "skills/polymarket-pool-ledger-accounting/references/account1-pool-ledger-update-pitfalls-20260613.md",
+      "size": 2198
+    },
+    {
+      "path": "skills/polymarket-pool-ledger-accounting/references/market-level-pool-allocation-and-public-page-rules.md",
+      "size": 2253
+    },
+    {
+      "path": "skills/sports-betting-risk-management/README.md",
+      "size": 849
+    },
+    {
+      "path": "skills/sports-betting-risk-management/SKILL.md",
+      "size": 12094
+    },
+    {
+      "path": "skills/sports-betting-risk-management/_meta.json",
+      "size": 148
+    },
+    {
+      "path": "skills/sports-betting-risk-management/references/polymarket-live-execution-and-proportional-staking.md",
+      "size": 2294
+    },
+    {
+      "path": "skills/sports-betting-risk-management/references/world-cup-opening-match-pattern.md",
+      "size": 1250
+    },
+    {
+      "path": "skills/sports-betting-risk-management/references/worldcup-injury-lineup-adjustment-20260613.md",
+      "size": 3851
+    },
+    {
+      "path": "skills/world-cup-caiqiu-prediction/README.md",
+      "size": 691
+    },
+    {
+      "path": "skills/world-cup-caiqiu-prediction/SKILL.md",
+      "size": 8376
+    },
+    {
+      "path": "skills/world-cup-caiqiu-prediction/_meta.json",
+      "size": 145
+    },
+    {
+      "path": "skills/world-cup-caiqiu-prediction/references/2026-polymarket-world-cup-proportional-staking.md",
+      "size": 1481
+    },
+    {
+      "path": "skills/world-cup-caiqiu-prediction/references/examples.md",
+      "size": 1207
+    },
+    {
+      "path": "skills/world-cup-caiqiu-prediction/references/polymarket-live-execution-hk-2026-06-11.md",
+      "size": 4056
+    },
+    {
+      "path": "skills/world-cup-daily-prediction/README.md",
+      "size": 634
+    },
+    {
+      "path": "skills/world-cup-daily-prediction/SKILL.md",
+      "size": 9144
+    },
+    {
+      "path": "skills/world-cup-daily-prediction/_meta.json",
+      "size": 144
+    },
+    {
+      "path": "skills/world-cup-daily-prediction/references/polymarket-gamma-world-cup-market-probe.md",
+      "size": 1522
+    },
+    {
+      "path": "skills/world-cup-daily-prediction/references/twice-daily-cron-world-cup-runbook.md",
+      "size": 3121
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/README.md",
+      "size": 750
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/SKILL.md",
+      "size": 19553
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/_meta.json",
+      "size": 151
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/account2-add50-execution-readback-20260613.md",
+      "size": 2541
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/account2-direct-script-execution-and-risk-override.md",
+      "size": 2560
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/account2-script-based-polymarket-execution.md",
+      "size": 3236
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/bankroll-capital-risk-and-large-order-guardrails.md",
+      "size": 3935
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/injury-adjusted-matchday-white-page-20260613.md",
+      "size": 2084
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/injury-driven-lineup-reassessment-20260613.md",
+      "size": 6152
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/inplay-position-pnl-audit-and-risk-adjustment-20260613.md",
+      "size": 4059
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/large-add-position-precision-and-market-selection-20260613.md",
+      "size": 2692
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/large-stake-override-and-position-accounting.md",
+      "size": 3523
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/live-fixture-market-api-probes.md",
+      "size": 5713
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/matchday-analysis-long-image-and-public-page-20260613.md",
+      "size": 3219
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/matchday-injury-adjusted-public-page-and-risk-downgrade-20260613.md",
+      "size": 3132
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/moltbook-x-football-prediction-learning-20260613.md",
+      "size": 5926
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/orchestrator-workflow.md",
+      "size": 1251
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-execution-checklist.md",
+      "size": 1701
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-multi-account-auth-troubleshooting.md",
+      "size": 4078
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-multi-account-control-plan.md",
+      "size": 8609
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-order-precision-and-verification-notes-20260613.md",
+      "size": 2009
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-participant-pool-accounting.md",
+      "size": 2068
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-pool-participant-allocation-accounting.md",
+      "size": 4160
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-position-close-and-risk-override-runbook.md",
+      "size": 4044
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-position-close-runbook.md",
+      "size": 2665
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/polymarket-position-reporting-and-round-notional.md",
+      "size": 2451
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/pool-ledger-and-participant-allocation.md",
+      "size": 2620
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/pool-ledger-market-level-accounting-and-public-page.md",
+      "size": 3675
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/proportional-staking-template.md",
+      "size": 1448
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/same-ratio-multi-account-execution-20260613.md",
+      "size": 2923
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/worldcup-certainty-card-web-cron-20260613.md",
+      "size": 2876
+    },
+    {
+      "path": "skills/world-cup-polymarket-orchestrator/references/worldcup-x-signal-monitor-wiring-20260613.md",
+      "size": 3676
+    }
+  ]
+}
